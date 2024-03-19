@@ -37,3 +37,21 @@ jobs:
           repo=${GITHUB_REPOSITORY}
           run_info=$(gh api repos/${repo}/actions/runs/${run_id})
           echo run_info: ${run_info}
+          # name is the name of the workflow file
+          # run_started_at is the start time of the workflow
+          # we want to get the number of milliseconds between the start time and now
+          name=$(echo ${run_info} | jq -r '.name')
+          run_url=$(echo ${run_info} | jq -r '.url')
+          run_started_at=$(echo ${run_info} | jq -r '.run_started_at')
+          run_attempt=$(echo ${run_info} | jq -r '.run_attempt')
+          start_seconds=$(date -d "${run_started_at}" +%s)
+          now_seconds=$(date +%s)
+          duration=$((now_seconds-start_seconds))
+          echo "Workflow ${name} took ${duration} seconds"
+          echo "run_url is ${run_url}"
+          echo "run_attempt is ${run_attempt}"
+          echo "run_id is ${run_id}"
+          echo "run_started_at is ${run_started_at}"
+          echo "start_seconds is ${start_seconds}"
+          echo "now_seconds is ${now_seconds}"
+          echo "duration is ${duration}"
